@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chat-room
+  name: chatroom
   labels:
-      app: chat-room
+      app: chatroom
 spec:
   selector:
     matchLabels:
-      app: chat-room
+      app: chatroom
   template:
     metadata:
       labels:
-        app: chat-room
+        app: chatroom
     spec:
       imagePullSecrets:
           - name: ghcr
       containers:
-      - name: chat-room
-        image: ghcr.io/tianvan/chat-room:latest
+      - name: chatroom
+        image: ghcr.io/tianvan/chatroom:latest
         imagePullPolicy: Always
         resources:
           limits:
