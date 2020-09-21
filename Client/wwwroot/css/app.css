@@ -15,3 +15,18 @@
     width: 30vw;
     height: 30vh;
 }
+
+.sending-box{
+    display:flex;
+    flex-flow:row nowrap;
+    align-items:stretch;
+}
+
+.sending-box__input{
+    flex-grow:1;
+    height:100%;
+    margin-right:16px;
+}
+.sending-box__button{
+    height:auto;
+}
