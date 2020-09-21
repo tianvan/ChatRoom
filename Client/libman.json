@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "normalize@8.0.1",
+      "destination": "wwwroot/lib/normalize/",
+      "files": [
+        "normalize.min.css"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "@fluentui/web-components@0.3.0",
+      "destination": "wwwroot/lib/fluentui/web-components/",
+      "files": [
+        "dist/web-components.min.js"
+      ]
+    }
+  ]
+}

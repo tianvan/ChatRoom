@@ -8,7 +8,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Server/ChatRoom.Server.csproj", "Server/"]
-COPY ["Shared/ChatRoom.Shared.csproj", "Shared/"]
 COPY ["Client/ChatRoom.Client.csproj", "Client/"]
 RUN dotnet restore "Server/ChatRoom.Server.csproj"
 COPY . .

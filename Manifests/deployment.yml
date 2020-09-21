@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-room
+  labels:
+      app: chat-room
+spec:
+  selector:
+    matchLabels:
+      app: chat-room
+  template:
+    metadata:
+      labels:
+        app: chat-room
+    spec:
+      imagePullSecrets:
+          - name: ghcr
+      containers:
+      - name: chat-room
+        image: ghcr.io/tianvan/chat-room:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

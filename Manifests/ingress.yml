@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chatroom
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: chatroom.cluster.tianvan.com
+      http:
+        paths:
+          - backend:
+              service:
+                  name: chatroom
+                  port:
+                      number: 80
+            pathType: Prefix
+            path: /
+  tls:
+    - hosts:
+        - chatroom.cluster.tianvan.com
+      secretName: chatroom-tls

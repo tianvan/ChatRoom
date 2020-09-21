@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatroom
+spec:
+  selector:
+    app: chatroom
+  ports:
+  - port: 80
+    targetPort: 80
