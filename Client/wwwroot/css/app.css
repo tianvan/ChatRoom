@@ -10,12 +10,12 @@
     z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-}
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
 
 .loading {
     width: 100vw;
@@ -35,17 +35,40 @@
     height: 30vh;
 }
 
-.sending-box{
-    display:flex;
-    flex-flow:row nowrap;
-    align-items:stretch;
+.sending-box {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
 }
 
-.sending-box__input{
-    flex-grow:1;
-    height:100%;
-    margin-right:16px;
+.sending-box__input {
+    flex-grow: 1;
+    height: 100%;
+    margin-right: 16px;
 }
-.sending-box__button{
-    height:auto;
+
+.sending-box__button {
+    height: auto;
+}
+
+.message-box {
+    display: flex;
+    flex-flow: row wrap;
+    align-items:center;
+
+    margin-top:16px;
+}
+
+.message-box__avatar {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+}
+
+.message-box__message {
+    text-align: center;
+    font-size: 12px;
+
+    background-color:#ffffff;
+    border-radius: 4px;
 }

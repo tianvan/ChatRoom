@@ -1,6 +1,46 @@
-﻿@page "/"
+﻿@using Microsoft.AspNetCore.SignalR.Client;
+
+@implements IDisposable
+
+@page "/"
+@inject NavigationManager NavigationManager
 
 <div>
-
-    <SendingBox></SendingBox>
+    <div>
+        @foreach (var message in _messages)
+        {
+            <MessageBox Message="@message"></MessageBox>
+        }
+    </div>
+    <SendingBox OnSubmitted="OnSubmittedAsync"></SendingBox>
 </div>
+
+@code{
+    private readonly IList<string> _messages = new List<string>();
+    private HubConnection _hubConnection;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
+            .Build();
+
+        _hubConnection.On<string>("ReceiveMessage",message=>
+        {
+            _messages.Add(message);
+            StateHasChanged();
+        });
+
+        await _hubConnection.StartAsync();
+    }
+
+    private async Task OnSubmittedAsync(string message)
+    {
+        await _hubConnection.InvokeAsync("SendMessageAsync",message);
+    }
+
+    public void Dispose()
+    {
+        _=_hubConnection.DisposeAsync();
+    }
+}
