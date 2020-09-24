@@ -6,14 +6,14 @@
 @page "/"
 @inject NavigationManager NavigationManager
 
-<div>
-    <div>
+<div class="chatroom">
+    <div class="chatroom__messages-box">
         @foreach (var message in _messages)
         {
             <MessageBox Content="@message.Content" Time="@message.Time"></MessageBox>
         }
     </div>
-    <SendingBox OnSubmitted="OnSubmittedAsync"></SendingBox>
+    <SendingBox class="chatroom__sending-box sending-box" OnSubmitted="OnSubmittedAsync"></SendingBox>
 </div>
 
 @code{

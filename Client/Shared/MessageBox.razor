@@ -1,4 +1,4 @@
-﻿<div class="message-box">
+﻿<div class="message-box" @attributes="AdditionnalAttributes">
     <svg class="message-box__avatar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
         <defs>
             <clipPath id="clip-path">
@@ -27,4 +27,7 @@
 
     [Parameter]
     public DateTime Time { get; set; }
+
+    [Parameter(CaptureUnmatchedValues =true)]
+    public IReadOnlyDictionary<string,object> AdditionnalAttributes { get; set; }
 }
