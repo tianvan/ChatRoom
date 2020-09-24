@@ -22,12 +22,13 @@
             <MessageBox Content="@message.Content" Time="@message.Time" PreTime="preTime"></MessageBox>
         }
     </div>
-    <SendingBox class="chatroom__sending-box sending-box" OnSubmitted="OnSubmittedAsync"></SendingBox>
+    <SendingBox @ref="_sendingBox" class="chatroom__sending-box sending-box" OnSubmitted="OnSubmittedAsync"></SendingBox>
 </div>
 
 @code{
     private readonly IList<Message> _messages = new List<Message>();
     private HubConnection _hubConnection;
+    private SendingBox _sendingBox;
 
     protected override async Task OnInitializedAsync()
     {
@@ -51,6 +52,7 @@
     private async Task OnSubmittedAsync(string message)
     {
         await _hubConnection.InvokeAsync("SendMessageAsync", message, DateTime.Now);
+        _sendingBox.Clear();
     }
 
     public void Dispose()
