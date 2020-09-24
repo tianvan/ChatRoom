@@ -57,35 +57,32 @@
     margin-bottom: 16px;
 }
 
-.message-box:last-of-type{
-    margin-bottom:0px;
-}
+    .message-box:last-of-type {
+        margin-bottom: 0px;
+    }
 
 .message-box__time {
-    box-sizing:border-box;
-
+    box-sizing: border-box;
     align-self: center;
-    padding:4px;
+    padding: 4px;
     margin-bottom: 8px;
-
-    border-radius:1px;
-
+    border-radius: 1px;
     text-align: center;
     font-size: 8px;
-
-    background-color:#dadada;
+    background-color: #dadada;
     color: #ffffff
 }
 
 .message-box__main {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
     align-items: center;
 }
 
 .message-box__avatar {
-    width: 24px;
-    height: 24px;
+    flex-shrink: 0;
+    width: 29.8px;
+    height: 29.8px;
     margin-right: 12px;
 }
 
@@ -93,7 +90,7 @@
     box-sizing: border-box;
     padding: 8px;
     border-radius: 4px;
-    text-align: center;
+    word-break: break-word;
     font-size: 12px;
     background-color: #ffffff;
 }
