@@ -4,7 +4,8 @@
         <span class="message-box__time">@Time</span>
     }
     <div class="message-box__main">
-        <svg class="message-box__avatar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+        <img class="message-box__avatar" src="@Avatar" />
+        @*<svg class="message-box__avatar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
             <defs>
                 <clipPath id="clip-path">
                     <rect width="24" height="24" fill="none" />
@@ -19,12 +20,15 @@
                     </g>
                 </g>
             </g>
-        </svg>
+        </svg>*@
         <span class="message-box__content">@Content</span>
     </div>
 </div>
 
 @code {
+    [Parameter]
+    public string Avatar { get; set; }
+
     [Parameter]
     public string Content { get; set; }
 
