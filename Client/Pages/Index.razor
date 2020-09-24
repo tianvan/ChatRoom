@@ -5,9 +5,10 @@
 
 @page "/"
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <div class="chatroom">
-    <div class="chatroom__messages-box">
+    <div class="chatroom__messages-box" @ref="_messagesBox">
 
         @for (int i = 0; i < _messages.Count; i++)
         {
@@ -29,6 +30,7 @@
     private readonly IList<Message> _messages = new List<Message>();
     private HubConnection _hubConnection;
     private SendingBox _sendingBox;
+    private ElementReference _messagesBox;
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,15 +38,19 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
             .Build();
 
-        _hubConnection.On<string, DateTime>("ReceiveMessage", (message, time) =>
-          {
-              _messages.Add(new Message
-              {
-                  Content = message,
-                  Time = time
-              });
-              StateHasChanged();
-          });
+        _hubConnection.On<string, DateTime>("ReceiveMessage",async (message, time) =>
+        {
+            _messages.Add(new Message
+            {
+                Content = message,
+                Time = time
+            });
+
+            StateHasChanged();
+
+            await JSRuntime.InvokeVoidAsync("ScrollBottom",_messagesBox);
+
+        });
 
         await _hubConnection.StartAsync();
     }
