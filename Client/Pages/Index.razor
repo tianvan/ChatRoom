@@ -8,9 +8,18 @@
 
 <div class="chatroom">
     <div class="chatroom__messages-box">
-        @foreach (var message in _messages)
+
+        @for (int i = 0; i < _messages.Count; i++)
         {
-            <MessageBox Content="@message.Content" Time="@message.Time"></MessageBox>
+            var preTime = default(DateTime);
+            var preIndex = i - 1;
+            if (preIndex >= 0)
+            {
+                preTime = _messages[preIndex].Time;
+            }
+            var message = _messages[i];
+
+            <MessageBox Content="@message.Content" Time="@message.Time" PreTime="preTime"></MessageBox>
         }
     </div>
     <SendingBox class="chatroom__sending-box sending-box" OnSubmitted="OnSubmittedAsync"></SendingBox>
@@ -26,26 +35,26 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
             .Build();
 
-        _hubConnection.On<string,DateTime>("ReceiveMessage",(message,time)=>
-        {
-            _messages.Add(new Message
-            {
-                Content=message,
-                Time=time
-            });
-            StateHasChanged();
-        });
+        _hubConnection.On<string, DateTime>("ReceiveMessage", (message, time) =>
+          {
+              _messages.Add(new Message
+              {
+                  Content = message,
+                  Time = time
+              });
+              StateHasChanged();
+          });
 
         await _hubConnection.StartAsync();
     }
 
     private async Task OnSubmittedAsync(string message)
     {
-        await _hubConnection.InvokeAsync("SendMessageAsync",message,DateTime.Now);
+        await _hubConnection.InvokeAsync("SendMessageAsync", message, DateTime.Now);
     }
 
     public void Dispose()
     {
-        _=_hubConnection.DisposeAsync();
+        _ = _hubConnection.DisposeAsync();
     }
 }
