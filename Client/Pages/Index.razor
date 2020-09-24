@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.SignalR.Client;
+﻿@using ChatRoom.Client.Models
+@using Microsoft.AspNetCore.SignalR.Client;
 
 @implements IDisposable
 
@@ -9,14 +10,14 @@
     <div>
         @foreach (var message in _messages)
         {
-            <MessageBox Message="@message"></MessageBox>
+            <MessageBox Content="@message.Content" Time="@message.Time"></MessageBox>
         }
     </div>
     <SendingBox OnSubmitted="OnSubmittedAsync"></SendingBox>
 </div>
 
 @code{
-    private readonly IList<string> _messages = new List<string>();
+    private readonly IList<Message> _messages = new List<Message>();
     private HubConnection _hubConnection;
 
     protected override async Task OnInitializedAsync()
@@ -25,9 +26,13 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
             .Build();
 
-        _hubConnection.On<string>("ReceiveMessage",message=>
+        _hubConnection.On<string,DateTime>("ReceiveMessage",(message,time)=>
         {
-            _messages.Add(message);
+            _messages.Add(new Message
+            {
+                Content=message,
+                Time=time
+            });
             StateHasChanged();
         });
 
@@ -36,7 +41,7 @@
 
     private async Task OnSubmittedAsync(string message)
     {
-        await _hubConnection.InvokeAsync("SendMessageAsync",message);
+        await _hubConnection.InvokeAsync("SendMessageAsync",message,DateTime.Now);
     }
 
     public void Dispose()

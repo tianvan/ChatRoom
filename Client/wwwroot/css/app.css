@@ -65,10 +65,18 @@
     margin-right: 12px;
 }
 
-.message-box__message {
+.message-box__content {
     text-align: center;
     font-size: 12px;
 
     background-color:#ffffff;
     border-radius: 4px;
+}
+
+.message-box__time{
+    margin-left:auto;
+
+    text-align:center;
+    font-size:10px;
+    color:#f2f2f2
 }
