@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http.Features;
@@ -8,7 +9,7 @@ namespace ChatRoom.Server.Hus
 {
     public class ChatHub : Hub
     {
-        private int _onlineUsers;
+        private static int s_onlineUsers;
 
         public async Task SendMessageAsync(string message, DateTime sendedTime)
         {
@@ -18,15 +19,15 @@ namespace ChatRoom.Server.Hus
 
         public override async Task OnConnectedAsync()
         {
-            _onlineUsers++;
-            await Clients.All.SendAsync("OnlineUsersChanged", _onlineUsers).ConfigureAwait(false);
+            Interlocked.Increment(ref s_onlineUsers);
+            await Clients.All.SendAsync("OnlineUsersChanged", s_onlineUsers).ConfigureAwait(false);
             await base.OnConnectedAsync().ConfigureAwait(false);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            _onlineUsers--;
-            await Clients.All.SendAsync("OnlineUsersChanged", _onlineUsers).ConfigureAwait(false);
+            Interlocked.Decrement(ref s_onlineUsers);
+            await Clients.All.SendAsync("OnlineUsersChanged", s_onlineUsers).ConfigureAwait(false);
             await base.OnDisconnectedAsync(exception).ConfigureAwait(false);
         }
     }
