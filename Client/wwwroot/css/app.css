@@ -103,9 +103,25 @@
 }
 
 .chatroom__messages-box {
+    position: relative;
     flex-grow: 1;
     margin-bottom: 16px;
     padding: 8px;
     background-color: #f5f5f5;
-    overflow-y:auto;
+    overflow-y: auto;
+}
+
+.chatroom__online-users {
+    position: fixed;
+    z-index:1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color:#d3d3d3;
+}
+
+.chatroom__message-box{
+    position:inherit;
+    z-index:2;
 }

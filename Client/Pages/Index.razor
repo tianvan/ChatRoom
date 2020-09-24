@@ -8,8 +8,9 @@
 @inject IJSRuntime JSRuntime
 
 <div class="chatroom">
-    <div class="chatroom__messages-box" @ref="_messagesBox">
 
+    <div class="chatroom__messages-box" @ref="_messagesBox">
+        <span class="chatroom__online-users">@(_onlineUsers)人在线</span>
         @for (int i = 0; i < _messages.Count; i++)
         {
             var preTime = default(DateTime);
@@ -20,7 +21,7 @@
             }
             var message = _messages[i];
 
-            <MessageBox Content="@message.Content" Time="@message.Time" PreTime="preTime"></MessageBox>
+            <MessageBox class="message-box chatroom__message-box" Content="@message.Content" Time="@message.Time" PreTime="preTime"></MessageBox>
         }
     </div>
     <SendingBox @ref="_sendingBox" class="chatroom__sending-box sending-box" OnSubmitted="OnSubmittedAsync"></SendingBox>
@@ -31,6 +32,7 @@
     private HubConnection _hubConnection;
     private SendingBox _sendingBox;
     private ElementReference _messagesBox;
+    private int _onlineUsers;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,18 +40,24 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
             .Build();
 
-        _hubConnection.On<string, DateTime>("ReceiveMessage",async (message, time) =>
+        _hubConnection.On<string, DateTime, string>("MessageReceived", async (message, time, ip) =>
+          {
+              _messages.Add(new Message
+              {
+                  Content = message,
+                  Time = time
+              });
+
+              StateHasChanged();
+
+              await JSRuntime.InvokeVoidAsync("ScrollBottom", _messagesBox);
+
+          });
+
+        _hubConnection.On<int>("OnlineUsersChanged", (onlineUsers) =>
         {
-            _messages.Add(new Message
-            {
-                Content = message,
-                Time = time
-            });
-
+            _onlineUsers = onlineUsers;
             StateHasChanged();
-
-            await JSRuntime.InvokeVoidAsync("ScrollBottom",_messagesBox);
-
         });
 
         await _hubConnection.StartAsync();
