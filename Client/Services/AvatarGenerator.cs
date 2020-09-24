@@ -12,6 +12,6 @@ namespace ChatRoom.Client.Services
             _configuration = configuration;
         }
 
-        public string Generate(string id) => $"{_configuration["AvatarAPIAddress"]}{id}";
+        public string Generate(string id) => $"{_configuration["AvatarAPIAddress"]}{id}.svg";
     }
 }
