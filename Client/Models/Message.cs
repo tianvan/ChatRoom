@@ -13,5 +13,7 @@ namespace ChatRoom.Client.Models
         public DateTime Time { get; set; }
 
         public bool IsOwned { get; set; }
+
+        public MessageType Type { get; set; }
     }
 }

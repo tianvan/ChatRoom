@@ -11,7 +11,7 @@
 <div class="chatroom">
 
     <div class="chatroom__messages-box" @ref="_messagesBox">
-        <span class="chatroom__online-users">@(_onlineUsers)Online</span>
+        <span class="chatroom__online-users">@(_onlineUsers) Online</span>
         @for (int i = 0; i < _messages.Count; i++)
         {
             var preTime = default(DateTime);
@@ -22,13 +22,14 @@
             }
             var message = _messages[i];
 
-            <MessageBox class="message-box chatroom__message-box" Avatar="@message.Avatar" Nickname="@message.Nickname" Content="@message.Content" Time="@message.Time" PreTime="preTime" IsOwned="@message.IsOwned"></MessageBox>
+            <MessageBox class="message-box chatroom__message-box" Avatar="@message.Avatar" Nickname="@message.Nickname" Content="@message.Content" Time="@message.Time" PreTime="preTime" IsOwned="@message.IsOwned" Type="@message.Type"></MessageBox>
         }
     </div>
+
     <SendingBox @ref="_sendingBox" class="chatroom__sending-box sending-box" OnSubmitted="OnSubmittedAsync"></SendingBox>
 </div>
 
-@code{
+@code {
     private readonly IList<Message> _messages = new List<Message>();
     private HubConnection _hubConnection;
     private SendingBox _sendingBox;
@@ -40,32 +41,47 @@
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
             .Build();
-        _hubConnection.On<string, DateTime, string,string>("MessageReceived", async (message, time, nickname,id) =>
-        {
-            _messages.Add(new Message
-            {
-                Avatar=Avatar.Generate(_hubConnection.ConnectionId),
-                Nickname=nickname,
-                Content = message,
-                Time = time,
-                IsOwned=_hubConnection.ConnectionId==id
-            });
 
-            StateHasChanged();
+        _hubConnection.On<string, DateTime, string, string>("MessageReceived", async (message, time, nickname, id) =>
+         {
+             _messages.Add(new Message
+             {
+                 Avatar = Avatar.Generate(id),
+                 Nickname = nickname,
+                 Content = message,
+                 Time = time,
+                 IsOwned = _hubConnection.ConnectionId == id
+             });
 
-            await JSRuntime.InvokeVoidAsync("ScrollBottom", _messagesBox);
+             StateHasChanged();
 
-        });
+             await JSRuntime.InvokeVoidAsync("ScrollBottom", _messagesBox);
 
-        _hubConnection.On<int,string>("OnlineUserJoined", (onlineUsers,nickname) =>
-        {
-            _onlineUsers = onlineUsers;
-            StateHasChanged();
-        });
+         });
+
+        _hubConnection.On<int, string>("OnlineUserJoined", (onlineUsers, nickname) =>
+         {
+             _onlineUsers = onlineUsers;
+             _messages.Add(new Message
+             {
+                 Nickname = nickname,
+                 Type = MessageType.Joined,
+                 Time = DateTime.Now
+             });
+
+             StateHasChanged();
+         });
 
         _hubConnection.On<int, string>("OnlineUserLeaved", (onlineUsers, nickname) =>
         {
             _onlineUsers = onlineUsers;
+            _messages.Add(new Message
+            {
+                Nickname = nickname,
+                Type = MessageType.Leaved,
+                Time = DateTime.Now
+            });
+
             StateHasChanged();
         });
 

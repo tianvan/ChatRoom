@@ -1,15 +1,29 @@
-﻿<div class="message-box" @attributes="AdditionnalAttributes">
+﻿@using ChatRoom.Client.Models
+
+<div class="message-box" @attributes="AdditionnalAttributes">
     @if (PreTime == default || Time - PreTime >= TimeSpan.FromMinutes(3))
     {
         <span class="message-box__time">@Time</span>
     }
-    <div class="message-box__main @(IsOwned ? "message-box__main--owned" : string.Empty)">
-        <img class="message-box__avatar" src="@Avatar" />
-        <div class="message-box__section">
-            <span class="message-box__nickname @(IsOwned ? "message-box__nickname--owned": string.Empty)">@Nickname@(IsOwned ? "(我)":string.Empty)</span>
-            <span class="message-box__content @(IsOwned ? "message-box__content--owned" : string.Empty)">@Content</span>
-        </div>
-    </div>
+
+    @switch (Type)
+    {
+        case MessageType.Joined:
+            <span class="message-box__connection">@Nickname joined</span>
+            break;
+        case MessageType.Leaved:
+            <span class="message-box__connection">@Nickname leaved</span>
+            break;
+        default:
+            <div class="message-box__main @(IsOwned ? "message-box__main--owned" : string.Empty)">
+                <img class="message-box__avatar" src="@Avatar" />
+                <div class="message-box__section">
+                    <span class="message-box__nickname @(IsOwned ? "message-box__nickname--owned": string.Empty)">@Nickname@(IsOwned ? "(我)":string.Empty)</span>
+                    <span class="message-box__content @(IsOwned ? "message-box__content--owned" : string.Empty)">@Content</span>
+                </div>
+            </div>
+            break;
+    }
 </div>
 
 @code {
@@ -30,6 +44,9 @@
 
     [Parameter]
     public bool IsOwned { get; set; }
+
+    [Parameter]
+    public MessageType Type { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object> AdditionnalAttributes { get; set; }

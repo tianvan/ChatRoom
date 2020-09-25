@@ -77,6 +77,18 @@
     color: #ffffff
 }
 
+.message-box__connection {
+    box-sizing: border-box;
+    align-self: center;
+    padding: 4px;
+    margin-bottom: 0px;
+    border-radius: 1px;
+    text-align: center;
+    font-size: 12px;
+    background-color: #dadada;
+    color: #ffffff
+}
+
 .message-box__main {
     display: flex;
     flex-flow: row nowrap;
