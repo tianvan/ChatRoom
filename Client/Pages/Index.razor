@@ -22,7 +22,7 @@
             }
             var message = _messages[i];
 
-            <MessageBox class="message-box chatroom__message-box" Avatar="@message.Avatar" Nickname="@message.Nickname" Content="@message.Content" Time="@message.Time" PreTime="preTime"></MessageBox>
+            <MessageBox class="message-box chatroom__message-box" Avatar="@message.Avatar" Nickname="@message.Nickname" Content="@message.Content" Time="@message.Time" PreTime="preTime" IsOwned="@message.IsOwned"></MessageBox>
         }
     </div>
     <SendingBox @ref="_sendingBox" class="chatroom__sending-box sending-box" OnSubmitted="OnSubmittedAsync"></SendingBox>
@@ -40,14 +40,15 @@
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
             .Build();
-        _hubConnection.On<string, DateTime, string>("MessageReceived", async (message, time, nickname) =>
+        _hubConnection.On<string, DateTime, string,string>("MessageReceived", async (message, time, nickname,id) =>
           {
               _messages.Add(new Message
               {
                   Avatar=Avatar.Generate(_hubConnection.ConnectionId),
                   Nickname=nickname,
                   Content = message,
-                  Time = time
+                  Time = time,
+                  IsOwned=_hubConnection.ConnectionId==id
               });
 
               StateHasChanged();

@@ -20,7 +20,7 @@ namespace ChatRoom.Server.Hubs
         private static int s_onlineUsers;
 
         public async Task SendMessageAsync(string message, DateTime sendedTime) =>
-            await Clients.All.SendAsync("MessageReceived", message, sendedTime, _nicknameGenerator.Generate(Context.ConnectionId).ToString()).ConfigureAwait(false);
+            await Clients.All.SendAsync("MessageReceived", message, sendedTime, _nicknameGenerator.Generate(Context.ConnectionId).ToString(), Context.ConnectionId).ConfigureAwait(false);
 
         public override async Task OnConnectedAsync()
         {

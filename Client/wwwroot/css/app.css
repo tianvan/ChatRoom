@@ -82,6 +82,10 @@
     flex-flow: row nowrap;
 }
 
+.message-box__main--owned {
+    flex-flow: row-reverse nowrap;
+}
+
 .message-box__avatar {
     flex-shrink: 0;
     width: 44px;
@@ -101,6 +105,10 @@
     color: #a6a6a6;
 }
 
+.message-box__nickname--owned {
+    align-self: flex-end;
+}
+
 .message-box__content {
     box-sizing: border-box;
     padding: 8px;
@@ -108,6 +116,10 @@
     word-break: break-word;
     font-size: 14px;
     background-color: #ffffff;
+}
+
+.message-box__content--owned {
+    background-color: #83F256;
 }
 
 .chatroom {

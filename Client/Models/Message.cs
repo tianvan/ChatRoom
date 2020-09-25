@@ -11,5 +11,7 @@ namespace ChatRoom.Client.Models
         public string Content { get; set; }
 
         public DateTime Time { get; set; }
+
+        public bool IsOwned { get; set; }
     }
 }
