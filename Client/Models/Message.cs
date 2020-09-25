@@ -6,6 +6,8 @@ namespace ChatRoom.Client.Models
     {
         public string Avatar { get; set; }
 
+        public string Nickname { get; set; }
+
         public string Content { get; set; }
 
         public DateTime Time { get; set; }

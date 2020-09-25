@@ -80,9 +80,22 @@
 
 .message-box__avatar {
     flex-shrink: 0;
-    width: 29.8px;
-    height: 29.8px;
-    margin-right: 12px;
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    margin-top: 1px;
+}
+
+.message-box__section {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.message-box__nickname {
+    margin-bottom:4px;
+
+    font-size: 8px;
+    color: #a6a6a6;
 }
 
 .message-box__content {
@@ -113,15 +126,15 @@
 
 .chatroom__online-users {
     position: fixed;
-    z-index:1;
+    z-index: 1;
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 48px;
-    color:#d3d3d3;
+    color: #d3d3d3;
 }
 
-.chatroom__message-box{
-    position:inherit;
-    z-index:2;
+.chatroom__message-box {
+    position: inherit;
+    z-index: 2;
 }

@@ -1,6 +1,7 @@
 using System.Linq;
 
-using ChatRoom.Server.Hus;
+using ChatRoom.Server.Hubs;
+using ChatRoom.Server.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,9 @@ namespace ChatRoom.Server
                     new[] { "application/octet-stream" });
             });
             services.AddRazorPages();
+
+            services.Configure<NicknameGeneratorOptions>(Configuration.GetSection(NicknameGeneratorOptions.Position));
+            services.AddSingleton<INicknameGenerator, NicknameGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

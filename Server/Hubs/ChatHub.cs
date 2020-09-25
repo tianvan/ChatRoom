@@ -2,20 +2,25 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Http.Features;
+using ChatRoom.Server.Services;
+
 using Microsoft.AspNetCore.SignalR;
 
-namespace ChatRoom.Server.Hus
+namespace ChatRoom.Server.Hubs
 {
     public class ChatHub : Hub
     {
+        private readonly INicknameGenerator _nicknameGenerator;
+
+        public ChatHub(INicknameGenerator nicknameGenerator)
+        {
+            _nicknameGenerator = nicknameGenerator;
+        }
+
         private static int s_onlineUsers;
 
-        public async Task SendMessageAsync(string message, DateTime sendedTime)
-        {
-            var userIp = Context.Features.Get<IHttpConnectionFeature>().RemoteIpAddress.ToString();
-            await Clients.All.SendAsync("MessageReceived", message, sendedTime, userIp).ConfigureAwait(false);
-        }
+        public async Task SendMessageAsync(string message, DateTime sendedTime) =>
+            await Clients.All.SendAsync("MessageReceived", message, sendedTime, _nicknameGenerator.Generate(Context.ConnectionId).ToString()).ConfigureAwait(false);
 
         public override async Task OnConnectedAsync()
         {
@@ -28,6 +33,7 @@ namespace ChatRoom.Server.Hus
         {
             Interlocked.Decrement(ref s_onlineUsers);
             await Clients.All.SendAsync("OnlineUsersChanged", s_onlineUsers).ConfigureAwait(false);
+            _nicknameGenerator.Remove(Context.ConnectionId);
             await base.OnDisconnectedAsync(exception).ConfigureAwait(false);
         }
     }
