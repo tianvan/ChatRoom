@@ -11,7 +11,7 @@
 <div class="chatroom">
 
     <div class="chatroom__messages-box" @ref="_messagesBox">
-        <span class="chatroom__online-users">@(_onlineUsers)人在线</span>
+        <span class="chatroom__online-users">@(_onlineUsers)Online</span>
         @for (int i = 0; i < _messages.Count; i++)
         {
             var preTime = default(DateTime);
@@ -41,23 +41,29 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
             .Build();
         _hubConnection.On<string, DateTime, string,string>("MessageReceived", async (message, time, nickname,id) =>
-          {
-              _messages.Add(new Message
-              {
-                  Avatar=Avatar.Generate(_hubConnection.ConnectionId),
-                  Nickname=nickname,
-                  Content = message,
-                  Time = time,
-                  IsOwned=_hubConnection.ConnectionId==id
-              });
+        {
+            _messages.Add(new Message
+            {
+                Avatar=Avatar.Generate(_hubConnection.ConnectionId),
+                Nickname=nickname,
+                Content = message,
+                Time = time,
+                IsOwned=_hubConnection.ConnectionId==id
+            });
 
-              StateHasChanged();
+            StateHasChanged();
 
-              await JSRuntime.InvokeVoidAsync("ScrollBottom", _messagesBox);
+            await JSRuntime.InvokeVoidAsync("ScrollBottom", _messagesBox);
 
-          });
+        });
 
-        _hubConnection.On<int>("OnlineUsersChanged", (onlineUsers) =>
+        _hubConnection.On<int,string>("OnlineUserJoined", (onlineUsers,nickname) =>
+        {
+            _onlineUsers = onlineUsers;
+            StateHasChanged();
+        });
+
+        _hubConnection.On<int, string>("OnlineUserLeaved", (onlineUsers, nickname) =>
         {
             _onlineUsers = onlineUsers;
             StateHasChanged();
