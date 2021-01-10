@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: chatroom.cluster.tianvan.com
+    - host: chatroom.tianvan.com
       http:
         paths:
           - backend:
@@ -19,5 +19,5 @@ spec:
             path: /
   tls:
     - hosts:
-        - chatroom.cluster.tianvan.com
+        - chatroom.tianvan.com
       secretName: chatroom-tls
