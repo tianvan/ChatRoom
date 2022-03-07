@@ -1,5 +1,4 @@
 name: "CI"
-
 on:
   push:
     # Publish `master` as Docker `latest` image.
@@ -9,6 +8,15 @@ on:
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
+      
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'manual trigger'
 
   # Run tests for any PRs.
   pull_request:
