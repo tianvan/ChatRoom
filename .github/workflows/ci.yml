@@ -61,8 +61,7 @@ jobs:
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
 
       - name: Log into GitHub Container Registry
-        # TODO: Create a PAT with `read:packages` and `write:packages` scopes and save it as an Actions secret `CR_PAT`
-        run: echo "${{ secrets.CR_PAT }}" | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
 
       - name: Push image to GitHub Container Registry
         id: push_image
@@ -121,7 +120,7 @@ jobs:
           namespace: default
           container-registry-url: ${{ env.REGISTRY }}
           container-registry-username: ${{ github.actor }}
-          container-registry-password: ${{ secrets.CR_PAT }}
+          container-registry-password: ${{ secrets.GHCR_TOKEN }}
           secret-name: ${{ env.SECRET_NAME }}
 
       - name: Deploy to cluster
@@ -131,6 +130,7 @@ jobs:
           manifests: |
             Manifests/deployment.yml
             Manifests/service.yml
+            Manifests/ingressclass.yml
             Manifests/ingress.yml
           images: ${{ needs.push.outputs.image_id }}:${{ needs.push.outputs.short_sha }}
           imagepullsecrets: |
