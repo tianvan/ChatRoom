@@ -113,6 +113,14 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
+      - name: Set imagePullSecret
+        run: |
+          kubectl create secret docker-registry ${{ env.SECRET_NAME }} \
+            --docker-server=${{ env.REGISTRY }} \
+            --docker-username=${{ github.actor }} \
+            --docker-password=${{ secrets.GHCR_TOKEN }} \
+            -n default --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy to cluster
         uses: Azure/k8s-deploy@v1.2
         with:
