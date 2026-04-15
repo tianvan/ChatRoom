@@ -111,8 +111,7 @@ jobs:
         uses: azure/k8s-set-context@v1
         with:
           method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG }} # Use secret (https://developer.github.com/actions/managing-workflows/storing-secrets/)
-          context: kubernetes-admin@kubernetes #If left unspecified, current-context from kubeconfig is used as default
+          kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Set imagePullSecret
         uses: azure/k8s-create-secret@v1
