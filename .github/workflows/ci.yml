@@ -108,18 +108,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set kubernetes context
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-          chmod 600 ~/.kube/config
-
-      - name: Set imagePullSecret
-        run: |
-          kubectl create secret docker-registry ${{ env.SECRET_NAME }} \
-            --docker-server=${{ env.REGISTRY }} \
-            --docker-username=${{ github.actor }} \
-            --docker-password=${{ secrets.GHCR_TOKEN }} \
-            -n default --dry-run=client -o yaml | kubectl apply -f -
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Deploy to cluster
         uses: Azure/k8s-deploy@v1.2
